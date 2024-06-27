@@ -1,0 +1,74 @@
+[
+  {
+    "id": "1",
+    "title": "Striped T-shirt",
+    "price": 29.99,
+    "image": "https://example.com/images/striped_tshirt.jpg",
+    "description": "A comfortable and stylish striped t-shirt for everyday wear.",
+    "discount": 10,
+    "rating": 4.5
+  },
+  {
+    "id": "2",
+    "title": "Denim Jeans",
+    "price": 49.99,
+    "image": "https://example.com/images/denim_jeans.jpg",
+    "description": "Classic denim jeans with a modern fit. Perfect for any occasion.",
+    "discount": 0,
+    "rating": 4.8
+  },
+  {
+    "id": "3",
+    "title": "Hooded Sweatshirt",
+    "price": 39.99,
+    "image": "https://example.com/images/hooded_sweatshirt.jpg",
+    "description": "Stay cozy and warm in this stylish hooded sweatshirt.",
+    "discount": 20,
+    "rating": 4.2
+  },
+  {
+    "id": "4",
+    "title": "Casual Shorts",
+    "price": 24.99,
+    "image": "https://example.com/images/casual_shorts.jpg",
+    "description": "Comfortable shorts for a casual day out. Available in various colors.",
+    "discount": 15,
+    "rating": 4.0
+  },
+  {
+    "id": "5",
+    "title": "Printed Dress",
+    "price": 54.99,
+    "image": "https://example.com/images/printed_dress.jpg",
+    "description": "Elegant printed dress for special occasions. Flattering fit and vibrant colors.",
+    "discount": 5,
+    "rating": 4.7
+  },
+  {
+    "id": "6",
+    "title": "Leather Jacket",
+    "price": 99.99,
+    "image": "https://example.com/images/leather_jacket.jpg",
+    "description": "Classic leather jacket with a timeless design. Perfect for any season.",
+    "discount": 0,
+    "rating": 4.9
+  },
+  {
+    "id": "7",
+    "title": "Sneakers",
+    "price": 79.99,
+    "image": "https://example.com/images/sneakers.jpg",
+    "description": "Stylish and comfortable sneakers for everyday wear. Available in multiple colors.",
+    "discount": 10,
+    "rating": 4.3
+  },
+  {
+    "id": "8",
+    "title": "Button-up Shirt",
+    "price": 44.99,
+    "image": "https://example.com/images/button_up_shirt.jpg",
+    "description": "Versatile button-up shirt suitable for both casual and formal occasions.",
+    "discount": 0,
+    "rating": 4.6
+  }
+]
