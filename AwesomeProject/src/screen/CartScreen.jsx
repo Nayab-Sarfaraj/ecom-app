@@ -14,6 +14,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import CartContext from '../Context/CartContext';
+import { useSelector } from 'react-redux';
 const CartScreen = () => {
   const naivgation = useNavigation();
   const handleCheckOut = () => {
@@ -21,6 +22,8 @@ const CartScreen = () => {
   };
   const [subTotal, setSubTotal] = useState(0);
   const {cart, setCart} = useContext(CartContext);
+  const isLoggedIn = useSelector(state => state.LoginCredentials.isLoggedIn)
+  const navigation=useNavigation()
   // console.log('cart  ' );
   useEffect(() => {
     if (cart) {
@@ -32,6 +35,10 @@ const CartScreen = () => {
       console.log(subTotal);
     }
   }, [cart]);
+  useEffect(() => {
+    if (!isLoggedIn) navigation.navigate('SignUp');
+
+  }, [])
   return (
     <View
       style={{paddingHorizontal: 20, backgroundColor: '#FFFFFF'}}

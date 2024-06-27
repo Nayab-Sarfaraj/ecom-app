@@ -1,3 +1,5 @@
+import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
 import {
   Modal,
   StyleSheet,
@@ -6,23 +8,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useState} from 'react';
-import Header from '../components/Header';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {combineReducers} from '@reduxjs/toolkit';
-import api from '../utils/api';
-import userContext from '../Context/userContext';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useNavigation} from '@react-navigation/native';
+import api from '../utils/api';
 const ResetPaaword = () => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isValidPassword, setIsValidPassword] = useState(false);
-  const {userInfo, setUserInfo} = useContext(userContext);
+
   const [isVisible, setIsVisible] = useState(false);
   const navigation = useNavigation();
   const handleConfirmPassword = text => {
@@ -46,7 +41,7 @@ const ResetPaaword = () => {
       const data = res.data;
       console.log(data);
       if (data.success === true) {
-        setUserInfo([]);
+
         const response = await api.get('/api/v1/logout');
         const data = response.data;
         console.log('logout data', data);
@@ -68,8 +63,8 @@ const ResetPaaword = () => {
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            paddingHorizontal: 20,
-            // Set background color to transparent
+            paddingHorizontal: 20
+
           }}>
           <View
             style={{
@@ -85,7 +80,7 @@ const ResetPaaword = () => {
             <MaterialCommunityIcons
               name={'check-circle-outline'}
               size={80}
-              style={{color: '#0C9409'}}
+              style={{ color: '#0C9409' }}
             />
             <Text
               style={{
@@ -96,11 +91,11 @@ const ResetPaaword = () => {
               }}>
               Password Changed!
             </Text>
-            <Text style={{color: '#808080', fontSize: 18, fontWeight: '400'}}>
+            <Text style={{ color: '#808080', fontSize: 18, fontWeight: '400' }}>
               you can now use your new password to login to your account
             </Text>
             <TouchableOpacity
-              style={{width: '100%'}}
+              style={{ width: '100%' }}
               onPress={() => navigation.navigate('LogIn')}>
               <Text
                 style={{
@@ -122,12 +117,14 @@ const ResetPaaword = () => {
     );
   };
   return (
-    <View style={{paddingHorizontal: 20, backgroundColor: '#FFFFFF', flex: 1}}>
-      <Ionicons
-        name={'arrow-back'}
-        size={25}
-        style={{marginTop: 20, color: '#1A1A1A'}}
-      />
+    <View style={{ paddingHorizontal: 20, backgroundColor: '#FFFFFF', flex: 1 }}>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Ionicons
+          name={'arrow-back'}
+          size={25}
+          style={{ marginTop: 20, color: '#1A1A1A' }}
+        />
+      </TouchableOpacity>
       <Text
         style={{
           fontSize: 30,
@@ -137,12 +134,12 @@ const ResetPaaword = () => {
         }}>
         Reset password
       </Text>
-      <Text style={{fontSize: 20, fontWeight: '300'}}>
+      <Text style={{ fontSize: 20, fontWeight: '300' }}>
         Set the new password for your account
       </Text>
       <View>
-        <View style={{marginVertical: 20}}>
-          <Text style={{fontSize: 20, color: '#1A1A1A', marginBottom: 7}}>
+        <View style={{ marginVertical: 20 }}>
+          <Text style={{ fontSize: 20, color: '#1A1A1A', marginBottom: 7 }}>
             Old Password
           </Text>
           <View
@@ -180,8 +177,8 @@ const ResetPaaword = () => {
                 name={'exclamationcircleo'}
                 size={20}
                 style={[
-                  {color: '#ED1010'},
-                  oldPassword === '' && {display: 'none'},
+                  { color: '#ED1010' },
+                  oldPassword === '' && { display: 'none' },
                 ]}
               />
             ) : (
@@ -189,15 +186,15 @@ const ResetPaaword = () => {
                 name={'checkcircleo'}
                 size={20}
                 style={[
-                  {color: '#0C9409'},
-                  oldPassword === '' && {display: 'none'},
+                  { color: '#0C9409' },
+                  oldPassword === '' && { display: 'none' },
                 ]}
               />
             )}
           </View>
         </View>
-        <View style={{marginBottom: 20}}>
-          <Text style={{fontSize: 20, color: '#1A1A1A', marginBottom: 7}}>
+        <View style={{ marginBottom: 20 }}>
+          <Text style={{ fontSize: 20, color: '#1A1A1A', marginBottom: 7 }}>
             New Password
           </Text>
           <View
@@ -235,8 +232,8 @@ const ResetPaaword = () => {
                 name={'exclamationcircleo'}
                 size={20}
                 style={[
-                  {color: '#ED1010'},
-                  newPassword === '' && {display: 'none'},
+                  { color: '#ED1010' },
+                  newPassword === '' && { display: 'none' },
                 ]}
               />
             ) : (
@@ -244,15 +241,15 @@ const ResetPaaword = () => {
                 name={'checkcircleo'}
                 size={20}
                 style={[
-                  {color: '#0C9409'},
-                  newPassword === '' && {display: 'none'},
+                  { color: '#0C9409' },
+                  newPassword === '' && { display: 'none' },
                 ]}
               />
             )}
           </View>
         </View>
-        <View style={{marginVertical: 20}}>
-          <Text style={{fontSize: 20, color: '#1A1A1A', marginBottom: 7}}>
+        <View style={{ marginVertical: 20 }}>
+          <Text style={{ fontSize: 20, color: '#1A1A1A', marginBottom: 7 }}>
             Confirm Password
           </Text>
           <View
@@ -290,8 +287,8 @@ const ResetPaaword = () => {
                 name={'exclamationcircleo'}
                 size={20}
                 style={[
-                  {color: '#ED1010'},
-                  confirmPassword === '' && {display: 'none'},
+                  { color: '#ED1010' },
+                  confirmPassword === '' && { display: 'none' },
                 ]}
               />
             ) : (
@@ -299,8 +296,8 @@ const ResetPaaword = () => {
                 name={'checkcircleo'}
                 size={20}
                 style={[
-                  {color: '#0C9409'},
-                  confirmPassword === '' && {display: 'none'},
+                  { color: '#0C9409' },
+                  confirmPassword === '' && { display: 'none' },
                 ]}
               />
             )}

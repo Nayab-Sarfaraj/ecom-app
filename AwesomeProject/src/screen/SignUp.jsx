@@ -1,3 +1,5 @@
+import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -5,14 +7,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useState} from 'react';
-import Header from '../components/Header';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Entypo from 'react-native-vector-icons/Entypo';
-import api from '../utils/api';
-import {useNavigation} from '@react-navigation/native';
-import userContext from '../Context/userContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { RegisterUser } from '../store/slices/LoginCredentials';
 const SignUp = () => {
   const [email, setEmail] = useState('');
   const [invalidInput, setInvalidInput] = useState(false);
@@ -20,11 +17,13 @@ const SignUp = () => {
   const [invalidEmail, setInvalidEmail] = useState(false);
   const [passsword, setPassword] = useState('');
   const [isValidPassword, setIsValidPassword] = useState(false);
+  const isLoggedIn = useSelector(state => state.LoginCredentials.isLoggedIn)
   const capitalizeString = str => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
-  const {userInfo, setUserInfo} = useContext(userContext);
+
   const navigation = useNavigation();
+  const dispatch = useDispatch()
   const isValidEmail = email => {
     // Regular expression for validating email addresses
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -55,25 +54,26 @@ const SignUp = () => {
   };
   const handleSignUp = async () => {
     try {
-      console.log(email, passsword, name);
-      const res = await api.post('/api/v1/register', {
+
+
+      const res = await dispatch(RegisterUser({
         email,
-        password: passsword,
+        passsword,
         name,
-      });
-      const data = res.data;
-      console.log(data);
-      console.log('registeration form reply ' + JSON.stringify(data));
-      if (data.success === true) {
-        setUserInfo(data);
+      }))
+      const data = res.payload;
+
+
+      if (isLoggedIn || data.success) {
+
         navigation.navigate('Account');
       }
     } catch (error) {
-      console.log('register form error ', +error);
+      console.log('register form error ', error);
     }
   };
   return (
-    <View style={{paddingHorizontal: 20, backgroundColor: '#FFFFFF', flex: 1}}>
+    <View style={{ paddingHorizontal: 20, backgroundColor: '#FFFFFF', flex: 1 }}>
       <Text
         style={{
           fontSize: 30,
@@ -83,12 +83,12 @@ const SignUp = () => {
         }}>
         Create an account
       </Text>
-      <Text style={{fontSize: 20, fontWeight: '300'}}>
+      <Text style={{ fontSize: 20, fontWeight: '300' }}>
         Let's create your account
       </Text>
       <View>
-        <View style={{marginVertical: 20}}>
-          <Text style={{fontSize: 20, color: '#1A1A1A', marginBottom: 7}}>
+        <View style={{ marginVertical: 20 }}>
+          <Text style={{ fontSize: 20, color: '#1A1A1A', marginBottom: 7 }}>
             Full Name
           </Text>
           <View
@@ -115,8 +115,8 @@ const SignUp = () => {
             />
           </View>
         </View>
-        <View style={{marginBottom: 20}}>
-          <Text style={{fontSize: 20, color: '#1A1A1A', marginBottom: 7}}>
+        <View style={{ marginBottom: 20 }}>
+          <Text style={{ fontSize: 20, color: '#1A1A1A', marginBottom: 7 }}>
             Email
           </Text>
           <View
@@ -153,19 +153,19 @@ const SignUp = () => {
               <AntDesign
                 name={'exclamationcircleo'}
                 size={20}
-                style={[{color: '#ED1010'}, email === '' && {display: 'none'}]}
+                style={[{ color: '#ED1010' }, email === '' && { display: 'none' }]}
               />
             ) : (
               <AntDesign
                 name={'checkcircleo'}
                 size={20}
-                style={[{color: '#0C9409'}, email === '' && {display: 'none'}]}
+                style={[{ color: '#0C9409' }, email === '' && { display: 'none' }]}
               />
             )}
           </View>
         </View>
-        <View style={{marginBottom: 20}}>
-          <Text style={{fontSize: 20, color: '#1A1A1A', marginBottom: 7}}>
+        <View style={{ marginBottom: 20 }}>
+          <Text style={{ fontSize: 20, color: '#1A1A1A', marginBottom: 7 }}>
             Password
           </Text>
           <View
@@ -203,8 +203,8 @@ const SignUp = () => {
                 name={'exclamationcircleo'}
                 size={20}
                 style={[
-                  {color: '#ED1010'},
-                  passsword === '' && {display: 'none'},
+                  { color: '#ED1010' },
+                  passsword === '' && { display: 'none' },
                 ]}
               />
             ) : (
@@ -212,21 +212,21 @@ const SignUp = () => {
                 name={'checkcircleo'}
                 size={20}
                 style={[
-                  {color: '#0C9409'},
-                  passsword === '' && {display: 'none'},
+                  { color: '#0C9409' },
+                  passsword === '' && { display: 'none' },
                 ]}
               />
             )}
           </View>
         </View>
       </View>
-      <Text style={{color: '#1A1A1A', fontSize: 16, fontWeight: '400'}}>
+      <Text style={{ color: '#1A1A1A', fontSize: 16, fontWeight: '400' }}>
         By signing up you will agree to our{' '}
-        <Text style={{textDecorationLine: 'underline', fontWeight: '600'}}>
+        <Text style={{ textDecorationLine: 'underline', fontWeight: '600' }}>
           Terms,Privacy Policy
         </Text>
         and{' '}
-        <Text style={{textDecorationLine: 'underline', fontWeight: '600'}}>
+        <Text style={{ textDecorationLine: 'underline', fontWeight: '600' }}>
           Coookies
         </Text>
       </Text>
@@ -254,7 +254,7 @@ const SignUp = () => {
         }}>
         Already have a account?
         <TouchableOpacity onPress={() => navigation.navigate('LogIn')}>
-          <Text style={{textDecorationLine: 'underline', fontWeight: '700'}}>
+          <Text style={{ textDecorationLine: 'underline', fontWeight: '700' }}>
             Log In
           </Text>
         </TouchableOpacity>

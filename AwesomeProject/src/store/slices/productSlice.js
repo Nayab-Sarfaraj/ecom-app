@@ -1,6 +1,7 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
 import {act, startTransition} from 'react';
+import api from '../../utils/api';
 
 export const STATUSES = {
   LOADING: 'loading',
@@ -15,15 +16,15 @@ export const productSlice = createSlice({
     status: STATUSES.IDLE,
     data: [],
   },
-  extraReducers: bundler => {
-    bundler.addCase(fetchProducts.pending, (state, action) => {
+  extraReducers: builder => {
+    builder.addCase(fetchProducts.pending, (state, action) => {
       console.log(action.payload);
       state.status = STATUSES.LOADING;
     });
-    bundler.addCase(fetchProducts.rejected, (state, action) => {
-      state.addCase = STATUSES.ERROR;
+    builder.addCase(fetchProducts.rejected, (state, action) => {
+      state.status = STATUSES.ERROR;
     });
-    bundler.addCase(fetchProducts.fulfilled, (state, action) => {
+    builder.addCase(fetchProducts.fulfilled, (state, action) => {
       if (action.payload.message) {
         state.status = STATUSES.ERROR;
       }
@@ -34,11 +35,27 @@ export const productSlice = createSlice({
   },
 });
 
-export const fetchProducts = createAsyncThunk('fetchProducts', async page => {
-  const {data} = await axios.get(
-    `http://172.16.13.194:8080/api/v1/product?page=${page}`,
-  );
-  return data;
-});
+export const fetchProducts = createAsyncThunk(
+  'fetchProducts',
+  async ({page, category, minValue, mavVal}) => {
+    try {
+      let link = '';
+      if (page === 0) page = 1;
+      if (category) {
+        link = `/api/v1/product?category=${category}&page=${page}&price[gt]=${minValue}&price[lt]=${mavVal}`;
+      } else {
+        link = `/api/v1/product?page=${page}&price[gt]=${minValue}&price[lt]=${mavVal}`;
+      }
+
+      const {data} = await api.get(link);
+      console.log('the fetched products is' );
+      console.log(data)
+      return data;
+    } catch (error) {
+      console.log('error while fetcing');
+      console.log(error);
+    }
+  },
+);
 
 export default productSlice.reducer;

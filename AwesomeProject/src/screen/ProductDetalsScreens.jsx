@@ -6,27 +6,35 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import Header from '../components/Header';
 import Octicons from 'react-native-vector-icons/Octicons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
-import {useRoute} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import SavedContext from '../Context/SavedCart';
 import CartContext from '../Context/CartContext';
+import { useSelector } from 'react-redux';
 const ProductDetalsScreens = () => {
   const route = useRoute();
-  const {productDetail} = route.params;
+  const { productDetail } = route.params;
   console.log(productDetail);
   const size = ['S', 'M', 'L'];
-  const {savedItem, setSavedItem} = useContext(SavedContext);
-  const {cart, setCart} = useContext(CartContext);
+  const { savedItem, setSavedItem } = useContext(SavedContext);
+  const { cart, setCart } = useContext(CartContext);
+  const isLoggedIn = useSelector(state => state.LoginCredentials.isLoggedIn
+  )
+  const navigation = useNavigation()
   const handleSaved = () => {
     // console.log('dsdasdasdasdas');
+    if (!isLoggedIn) {
+      navigation.navigate("SignUp")
+      return
+    }
     if (!savedItem) {
       console.log('hdsadas');
       const newCart = [];
-      newCart.push({...productDetail, quantity: 1});
+      newCart.push({ ...productDetail, quantity: 1 });
       setSavedItem(newCart);
       return;
     }
@@ -39,14 +47,18 @@ const ProductDetalsScreens = () => {
       console.log('exist fdsdfsd  ' + isExist);
       return;
     } else {
-      newCart.push({...productDetail, quantity: 1});
+      newCart.push({ ...productDetail, quantity: 1 });
       setSavedItem(newCart);
     }
   };
   const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      navigation.navigate("SignUp")
+      return
+    }
     if (!cart) {
       const newCart = [];
-      newCart.push({...productDetail, quantity: 1});
+      newCart.push({ ...productDetail, quantity: 1 });
       setCart(newCart);
       console.log(cart)
       return;
@@ -66,23 +78,23 @@ const ProductDetalsScreens = () => {
       setCart(newCart);
       console.log(cart)
     } else {
-      newCart.push({...productDetail, quantity: 1});
+      newCart.push({ ...productDetail, quantity: 1 });
       setCart(newCart);
       console.log(cart)
     }
   };
   return (
-    <View style={{flex: 1, backgroundColor: '#FFFFFF', paddingHorizontal: 20}}>
-      <View style={{marginBottom: 15}}>
+    <View style={{ flex: 1, backgroundColor: '#FFFFFF', paddingHorizontal: 20 }}>
+      <View style={{ marginBottom: 15 }}>
         <Header text={'Details'} />
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{height: 370}}>
+        <View style={{ height: 370 }}>
           <Image
             source={{
               uri: productDetail.images[0].url,
             }}
-            style={{flex: 1, borderRadius: 20}}></Image>
+            style={{ flex: 1, borderRadius: 20 }}></Image>
           <TouchableOpacity
             style={{
               position: 'absolute',
@@ -96,7 +108,7 @@ const ProductDetalsScreens = () => {
               borderRadius: 10,
             }}
             onPress={handleSaved}>
-            <Octicons name={'heart'} size={25} style={{color: '#1A1A1A'}} />
+            <Octicons name={'heart'} size={25} style={{ color: '#1A1A1A' }} />
           </TouchableOpacity>
         </View>
         <View>
@@ -110,10 +122,10 @@ const ProductDetalsScreens = () => {
             {productDetail.name}
           </Text>
           <View
-            style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
+            style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
             <Ionicons
               name={'star'}
-              style={{color: '#FFA928', marginRight: 15}}
+              style={{ color: '#FFA928', marginRight: 15 }}
               size={20}
             />
             <Text
@@ -123,12 +135,12 @@ const ProductDetalsScreens = () => {
                 color: '#1A1A1A',
               }}>
               {productDetail?.rating ? productDetail.ratings : 'Product'}/5
-              <Text style={{textDecorationLine: 'none', color: '#808080'}}>
+              <Text style={{ textDecorationLine: 'none', color: '#808080' }}>
                 ({productDetail.numOfReviews} reviews)
               </Text>
             </Text>
           </View>
-          <Text style={{fontSize: 18, color: '#808080', marginTop: 20}}>
+          <Text style={{ fontSize: 18, color: '#808080', marginTop: 20 }}>
             {productDetail.description}
           </Text>
           <Text
@@ -140,7 +152,7 @@ const ProductDetalsScreens = () => {
             }}>
             Choose Size{' '}
           </Text>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {size.map(item => {
               return (
                 <Text
@@ -173,8 +185,8 @@ const ProductDetalsScreens = () => {
           paddingBottom: 10,
         }}>
         <View>
-          <Text style={{fontSize: 17}}>Price</Text>
-          <Text style={{fontSize: 22, color: '#1A1A1A', fontWeight: '700'}}>
+          <Text style={{ fontSize: 17 }}>Price</Text>
+          <Text style={{ fontSize: 22, color: '#1A1A1A', fontWeight: '700' }}>
             ${productDetail?.price ? productDetail.price : '99.99'}
           </Text>
         </View>
@@ -198,8 +210,8 @@ const ProductDetalsScreens = () => {
             <Feather
               name={'shopping-bag'}
               size={20}
-              style={{color: 'white'}}></Feather>
-            <Text style={{marginLeft: 15, color: 'white', fontSize: 18}}>
+              style={{ color: 'white' }}></Feather>
+            <Text style={{ marginLeft: 15, color: 'white', fontSize: 18 }}>
               Add to Cart{' '}
             </Text>
           </View>

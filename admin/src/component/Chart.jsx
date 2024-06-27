@@ -3,7 +3,7 @@ import { VictoryAxis, VictoryChart, VictoryLine, VictoryPie, VictoryTooltip } fr
 
 const LineChartComponent = ({ products }) => {
   const data = []
-  products.forEach(element => {
+  products?.forEach(element => {
     data.push({ x: element.Stock, y: element.price })
   });
   return (
@@ -35,7 +35,7 @@ const LineChartComponent = ({ products }) => {
 
 const PieChartComponent = ({ products }) => {
   const data = []
-  products.forEach(element => {
+  products?.forEach(element => {
     data.push({ x: element.name, y: element.price })
   });
   return (

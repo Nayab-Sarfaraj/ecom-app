@@ -1,3 +1,5 @@
+import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -5,14 +7,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useState} from 'react';
-import Header from '../components/Header';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Entypo from 'react-native-vector-icons/Entypo';
-import api from '../utils/api';
-import {useNavigation} from '@react-navigation/native';
-import userContext from '../Context/userContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { LogInUser } from '../store/slices/LoginCredentials';
 const LogIn = () => {
   const [email, setEmail] = useState('');
   const [invalidInput, setInvalidInput] = useState(false);
@@ -20,16 +17,18 @@ const LogIn = () => {
   const [invalidEmail, setInvalidEmail] = useState(false);
   const [passsword, setPassword] = useState('');
   const [isValidPassword, setIsValidPassword] = useState(false);
+  const isLoggedIn = useSelector(state => state.LoginCredentials.isLoggedIn)
   const capitalizeString = str => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
-  const {userInfo, setUserInfo} = useContext(userContext);
+
   const isValidEmail = email => {
     // Regular expression for validating email addresses
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
   const navigation = useNavigation();
+  const dispatch = useDispatch()
   const handleEmail = text => {
     // console.log(text);
     // const newText = text.toUpperCase();
@@ -58,23 +57,23 @@ const LogIn = () => {
   const handleLogIn = async () => {
     try {
       console.log(email, passsword, name);
-      const res = await api.post('/api/v1/login', {
+
+      const res = await dispatch(LogInUser({
         email,
-        password: passsword,
-      });
-      const data = res.data;
-      console.log(data);
-      console.log('registeration form reply ' + JSON.stringify(data));
-      if (data.success === true) {
-        setUserInfo(data);
+        passsword,
+      }))
+      const data = res.payload;
+
+      if (isLoggedIn || data.success) {
+
         navigation.navigate('Account');
       }
     } catch (error) {
-      console.log('register form error ', +error);
+      console.log('register form error ', error);
     }
   };
   return (
-    <View style={{paddingHorizontal: 20, backgroundColor: '#FFFFFF', flex: 1}}>
+    <View style={{ paddingHorizontal: 20, backgroundColor: '#FFFFFF', flex: 1 }}>
       <Text
         style={{
           fontSize: 30,
@@ -84,12 +83,12 @@ const LogIn = () => {
         }}>
         Login to your account
       </Text>
-      <Text style={{fontSize: 20, fontWeight: '300'}}>
+      <Text style={{ fontSize: 20, fontWeight: '300' }}>
         Its great to see you again
       </Text>
       <View>
-        <View style={{marginVertical: 20}}>
-          <Text style={{fontSize: 20, color: '#1A1A1A', marginBottom: 7}}>
+        <View style={{ marginVertical: 20 }}>
+          <Text style={{ fontSize: 20, color: '#1A1A1A', marginBottom: 7 }}>
             Email
           </Text>
           <View
@@ -126,19 +125,19 @@ const LogIn = () => {
               <AntDesign
                 name={'exclamationcircleo'}
                 size={20}
-                style={[{color: '#ED1010'}, email === '' && {display: 'none'}]}
+                style={[{ color: '#ED1010' }, email === '' && { display: 'none' }]}
               />
             ) : (
               <AntDesign
                 name={'checkcircleo'}
                 size={20}
-                style={[{color: '#0C9409'}, email === '' && {display: 'none'}]}
+                style={[{ color: '#0C9409' }, email === '' && { display: 'none' }]}
               />
             )}
           </View>
         </View>
-        <View style={{marginBottom: 20}}>
-          <Text style={{fontSize: 20, color: '#1A1A1A', marginBottom: 7}}>
+        <View style={{ marginBottom: 20 }}>
+          <Text style={{ fontSize: 20, color: '#1A1A1A', marginBottom: 7 }}>
             Password
           </Text>
           <View
@@ -176,8 +175,8 @@ const LogIn = () => {
                 name={'exclamationcircleo'}
                 size={20}
                 style={[
-                  {color: '#ED1010'},
-                  passsword === '' && {display: 'none'},
+                  { color: '#ED1010' },
+                  passsword === '' && { display: 'none' },
                 ]}
               />
             ) : (
@@ -185,8 +184,8 @@ const LogIn = () => {
                 name={'checkcircleo'}
                 size={20}
                 style={[
-                  {color: '#0C9409'},
-                  passsword === '' && {display: 'none'},
+                  { color: '#0C9409' },
+                  passsword === '' && { display: 'none' },
                 ]}
               />
             )}
@@ -204,7 +203,7 @@ const LogIn = () => {
         }}>
         Forgot your password?{' '}
         <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>
-          <Text style={{textDecorationLine: 'underline', fontWeight: '600'}}>
+          <Text style={{ textDecorationLine: 'underline', fontWeight: '600' }}>
             Reset your password
           </Text>
         </TouchableOpacity>
@@ -232,7 +231,7 @@ const LogIn = () => {
           textAlign: 'center',
         }}>
         Don't have and account{' '}
-        <Text style={{textDecorationLine: 'underline', fontWeight: '700'}}>
+        <Text style={{ textDecorationLine: 'underline', fontWeight: '700' }}>
           Join
         </Text>
       </Text>

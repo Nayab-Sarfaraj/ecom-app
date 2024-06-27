@@ -1,3 +1,5 @@
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -5,19 +7,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
-import Header from '../components/Header';
-import userContext from '../Context/userContext';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useNavigation} from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import Header from '../components/Header';
 const MyDetails = () => {
-  const {userInfo, setUserInfo} = useContext(userContext);
-  console.log(userInfo);
+  const user = useSelector(state => state.LoginCredentials.data.user)
+  const isLoggedIn = useSelector(state => state.LoginCredentials.isLoggedIn)
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  // const [user, setUser] = useState('');
+
   const handleProfileUpdate = () => {
     try {
     } catch (error) {
@@ -25,22 +24,23 @@ const MyDetails = () => {
     }
   };
   useEffect(() => {
-    if (userInfo && userInfo.user) {
-      setEmail(userInfo.user.email);
-      setName(userInfo.user.name);
+    if (user) {
+      setEmail(user.email)
+      setName(user.name)
     }
+    if (!isLoggedIn) navigation.navigate("/SignUp")
   }, []);
   return (
-    <View style={{backgroundColor: '#FFFFFF', flex: 1, paddingHorizontal: 20}}>
+    <View style={{ backgroundColor: '#FFFFFF', flex: 1, paddingHorizontal: 20 }}>
       <Header text={'My Details'} />
-      <View style={{alignItems: 'center', marginTop: 20}}>
+      <View style={{ alignItems: 'center', marginTop: 20 }}>
         <MaterialCommunityIcons
           name={'account-circle-outline'}
           size={120}
-          style={{color: '#1A1A1A'}}
+          style={{ color: '#1A1A1A' }}
         />
       </View>
-      <View style={{marginTop: 20}}>
+      <View style={{ marginTop: 20 }}>
         <View>
           <Text
             style={{
@@ -74,7 +74,6 @@ const MyDetails = () => {
           </Text>
           <TextInput
             placeholder="Enter email"
-            // onChangeText={handleEmailChange}
             value={email}
             keyboardType="email-address"
             style={{
@@ -98,7 +97,7 @@ const MyDetails = () => {
             Reset password
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{width: '100%'}} onPress={handleProfileUpdate}>
+        <TouchableOpacity style={{ width: '100%' }} onPress={handleProfileUpdate}>
           <Text
             style={{
               backgroundColor: '#1A1A1A',

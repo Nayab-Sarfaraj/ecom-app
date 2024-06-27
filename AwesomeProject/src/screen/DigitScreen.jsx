@@ -1,16 +1,10 @@
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
   TextInput,
-  TextInputComponent,
-  TouchableOpacity,
-  View,
+  View
 } from 'react-native';
-import React, {useState} from 'react';
-import Header from '../components/Header';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 const DigitScreen = () => {
   const [email, setEmail] = useState('');

@@ -1,23 +1,23 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useContext, useState} from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useContext, useState } from 'react';
 import Octicons from 'react-native-vector-icons/Octicons';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import SavedContext from '../Context/SavedCart';
-const ProductCard = ({item, saved}) => {
+import { useSelector } from 'react-redux';
+const ProductCard = ({ item, saved }) => {
   const data = item.item;
-  const {savedItem, setSavedItem} = useContext(SavedContext);
-  // console.log(data);
-  // console.log(saved);
+  const { savedItem, setSavedItem } = useContext(SavedContext);
+  const isLoggedIn = useSelector(state => state.LoginCredentials.isLoggedIn)
   const navigation = useNavigation();
   const handleNavigation = data => {
-    navigation.navigate('ProductDetails', {productDetail: data});
+    navigation.navigate('ProductDetails', { productDetail: data });
   };
   const handleSaved = () => {
-    // console.log('dsdasdasdasdas');
+    if (!isLoggedIn) return
     if (!savedItem) {
       console.log('hdsadas');
       const newCart = [];
-      newCart.push({...data, quantity: 1});
+      newCart.push({ ...data, quantity: 1 });
       setSavedItem(newCart);
       return;
     }
@@ -30,7 +30,7 @@ const ProductCard = ({item, saved}) => {
       console.log('exist fdsdfsd  ' + isExist);
       return;
     } else {
-      newCart.push({...data, quantity: 1});
+      newCart.push({ ...data, quantity: 1 });
       setSavedItem(newCart);
     }
   };
@@ -41,7 +41,7 @@ const ProductCard = ({item, saved}) => {
   };
   return (
     <TouchableOpacity
-      style={{marginHorizontal: 13, borderRadius: 20}}
+      style={{ marginHorizontal: 13, borderRadius: 20 }}
       onPress={() => {
         handleNavigation(data);
       }}>
@@ -73,15 +73,15 @@ const ProductCard = ({item, saved}) => {
             <Octicons
               name={'heart-fill'}
               size={25}
-              style={{color: '#ED1010'}}
+              style={{ color: '#ED1010' }}
             />
           ) : (
-            <Octicons name={'heart'} size={25} style={{color: '#1A1A1A'}} />
+            <Octicons name={'heart'} size={25} style={{ color: '#1A1A1A' }} />
           )}
         </TouchableOpacity>
       </View>
       <View>
-        <Text style={{fontSize: 21, fontWeight: '700', color: '#1A1A1A'}}>
+        <Text style={{ fontSize: 21, fontWeight: '700', color: '#1A1A1A' }}>
           {data.name}
         </Text>
         <View
@@ -91,9 +91,9 @@ const ProductCard = ({item, saved}) => {
             // justifyContent: 'center',
             marginTop: 5,
           }}>
-          <Text style={{fontSize: 15, marginRight: 10}}>${data.price}</Text>
+          <Text style={{ fontSize: 15, marginRight: 10 }}>${data.price}</Text>
           {saved === true ? null : (
-            <Text style={{fontSize: 15, color: '#ED1010'}}>
+            <Text style={{ fontSize: 15, color: '#ED1010' }}>
               {data.discount === 0 ? null : '-' + data.discount + '%'}{' '}
             </Text>
           )}

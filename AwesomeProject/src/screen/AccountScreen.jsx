@@ -1,25 +1,24 @@
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
 import {
-  Alert,
   Modal,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
-import Header from '../components/Header';
-import Octicons from 'react-native-vector-icons/Octicons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Octicons from 'react-native-vector-icons/Octicons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import {useNavigation} from '@react-navigation/native';
-import userContext from '../Context/userContext';
-import api from '../utils/api';
-// import AntDesign from 'react-native-vector-icons/AntDesign';
+import { useDispatch, useSelector } from 'react-redux';
+import Header from '../components/Header';
+import { LogOutUser } from '../store/slices/LoginCredentials';
 const AccountScreen = () => {
-  const {userInfo, setUserInfo} = useContext(userContext);
+  const dispatch = useDispatch()
   const navigation = useNavigation();
+  const isLoggedIn = useSelector(state => state.LoginCredentials.isLoggedIn)
   const handleNaviagtion = location => {
     console.log(location);
     navigation.navigate(location);
@@ -27,19 +26,21 @@ const AccountScreen = () => {
 
   const [isVisible, setIsVisible] = useState(false);
   useEffect(() => {
-    console.log(userInfo);
-    if (!userInfo || userInfo.message) {
-      console.log(userInfo);
+
+    if (!isLoggedIn) {
       navigation.navigate('SignUp');
     }
   }, []);
   const handleLogOut = async () => {
-    const res = await api.get('/api/v1/logout');
-    const data = res.data;
-    console.log(data);
-    setUserInfo(data);
-    if (data.success === true) {
-      navigation.navigate('SignUp');
+    try {
+      const res = await dispatch(LogOutUser())
+      const data = res.payload;
+      if (!isLoggedIn || data.success) {
+        navigation.navigate('SignUp');
+      }
+    } catch (error) {
+      console.log("error while logging ui ")
+      console.log(error)
     }
   };
   const renderModal = () => {
@@ -68,7 +69,7 @@ const AccountScreen = () => {
             <AntDesign
               name={'exclamationcircleo'}
               size={80}
-              style={{color: '#ED1010'}}
+              style={{ color: '#ED1010' }}
             />
             <Text
               style={{
@@ -79,10 +80,10 @@ const AccountScreen = () => {
               }}>
               Logout?
             </Text>
-            <Text style={{color: '#808080', fontSize: 18, fontWeight: '300'}}>
+            <Text style={{ color: '#808080', fontSize: 18, fontWeight: '300' }}>
               Are you sure you want to logout?
             </Text>
-            <TouchableOpacity style={{width: '100%'}} onPress={handleLogOut}>
+            <TouchableOpacity style={{ width: '100%' }} onPress={handleLogOut}>
               <Text
                 style={{
                   backgroundColor: '#ED1010',
@@ -98,7 +99,7 @@ const AccountScreen = () => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{width: '100%'}}
+              style={{ width: '100%' }}
               onPress={() => setIsVisible(!isVisible)}>
               <Text
                 style={{
@@ -122,23 +123,11 @@ const AccountScreen = () => {
     );
   };
   const handleLogout = () => {
-    // Alert.alert(
-    //   'Logout?',
-    //   'Are you sure you want to logout',
-    //   [
-    //     {
-    //       text: 'Cancel',
-    //       onPress: () => console.log('Cancel Pressed'),
-    //       style: 'cancel',
-    //     },
-    //     {text: 'OK', onPress: () => console.log('OK Pressed')},
-    //   ],
-    //   {cancelable: false},
-    // );
+
     setIsVisible(!isVisible);
   };
   return (
-    <View style={{backgroundColor: '#FFFFFF', flex: 1}}>
+    <View style={{ backgroundColor: '#FFFFFF', flex: 1 }}>
       <View
         style={{
           borderBottomWidth: 2,
@@ -159,13 +148,13 @@ const AccountScreen = () => {
           // paddingBottom: 25,
         }}
         onPress={() => handleNaviagtion('MyOrders')}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Octicons
             name={'container'}
             size={23}
-            style={{color: '#1A1A1A', marginRight: 10}}
+            style={{ color: '#1A1A1A', marginRight: 10 }}
           />
-          <Text style={{color: '#1A1A1A', fontSize: 18, fontWeight: '400'}}>
+          <Text style={{ color: '#1A1A1A', fontSize: 18, fontWeight: '400' }}>
             My Orders
           </Text>
         </View>
@@ -198,13 +187,13 @@ const AccountScreen = () => {
             // paddingHorizontal: 20,
           }}
           onPress={() => handleNaviagtion('MyDetails')}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <MaterialCommunityIcons
               name={'account-details'}
               size={23}
-              style={{color: '#1A1A1A', marginRight: 10}}
+              style={{ color: '#1A1A1A', marginRight: 10 }}
             />
-            <Text style={{color: '#1A1A1A', fontSize: 18, fontWeight: '400'}}>
+            <Text style={{ color: '#1A1A1A', fontSize: 18, fontWeight: '400' }}>
               My Details
             </Text>
           </View>
@@ -223,13 +212,13 @@ const AccountScreen = () => {
             // paddingHorizontal: 20,
           }}
           onPress={() => handleNaviagtion('AddressScreen')}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <MaterialCommunityIcons
               name={'home-city'}
               size={23}
-              style={{color: '#1A1A1A', marginRight: 10}}
+              style={{ color: '#1A1A1A', marginRight: 10 }}
             />
-            <Text style={{color: '#1A1A1A', fontSize: 18, fontWeight: '400'}}>
+            <Text style={{ color: '#1A1A1A', fontSize: 18, fontWeight: '400' }}>
               My Address
             </Text>
           </View>
@@ -248,13 +237,13 @@ const AccountScreen = () => {
             // paddingHorizontal: 20,
           }}
           onPress={() => handleNaviagtion('Payment')}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <AntDesign
               name={'creditcard'}
               size={22}
-              style={[{color: '#1A1A1A', marginRight: 10}]}
+              style={[{ color: '#1A1A1A', marginRight: 10 }]}
             />
-            <Text style={{color: '#1A1A1A', fontSize: 18, fontWeight: '400'}}>
+            <Text style={{ color: '#1A1A1A', fontSize: 18, fontWeight: '400' }}>
               Payment Methods
             </Text>
           </View>
@@ -273,14 +262,14 @@ const AccountScreen = () => {
             // paddingHorizontal: 20,
           }}
           onPress={() => handleNaviagtion('Notification')}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <SimpleLineIcons
               name={'bell'}
               size={25}
-              style={{color: '#1A1A1A', marginRight: 10}}
+              style={{ color: '#1A1A1A', marginRight: 10 }}
             />
 
-            <Text style={{color: '#1A1A1A', fontSize: 18, fontWeight: '400'}}>
+            <Text style={{ color: '#1A1A1A', fontSize: 18, fontWeight: '400' }}>
               Notification
             </Text>
           </View>
@@ -306,13 +295,13 @@ const AccountScreen = () => {
             // paddingHorizontal: 20,
           }}
           onPress={() => handleNaviagtion('FAQS')}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Octicons
               name={'question'}
               size={23}
-              style={{color: '#1A1A1A', marginRight: 10}}
+              style={{ color: '#1A1A1A', marginRight: 10 }}
             />
-            <Text style={{color: '#1A1A1A', fontSize: 18, fontWeight: '400'}}>
+            <Text style={{ color: '#1A1A1A', fontSize: 18, fontWeight: '400' }}>
               FAQs
             </Text>
           </View>
@@ -331,20 +320,20 @@ const AccountScreen = () => {
             // paddingHorizontal: 20,
           }}
           onPress={() => handleNaviagtion('Help')}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <MaterialCommunityIcons
               name={'headphones'}
               size={23}
-              style={{color: '#1A1A1A', marginRight: 10}}
+              style={{ color: '#1A1A1A', marginRight: 10 }}
             />
-            <Text style={{color: '#1A1A1A', fontSize: 18, fontWeight: '400'}}>
+            <Text style={{ color: '#1A1A1A', fontSize: 18, fontWeight: '400' }}>
               Help Center
             </Text>
           </View>
           <MaterialIcons name={'arrow-forward-ios'} size={20} />
         </TouchableOpacity>
       </View>
-      <View style={{paddingHorizontal: 20}}>
+      <View style={{ paddingHorizontal: 20 }}>
         <TouchableOpacity
           style={{
             flexDirection: 'row',
@@ -360,9 +349,9 @@ const AccountScreen = () => {
           <MaterialIcons
             name={'logout'}
             size={23}
-            style={{color: '#ED1010', marginRight: 10}}
+            style={{ color: '#ED1010', marginRight: 10 }}
           />
-          <Text style={{color: '#ED1010', fontSize: 18, fontWeight: '400'}}>
+          <Text style={{ color: '#ED1010', fontSize: 18, fontWeight: '400' }}>
             Log out
           </Text>
           {renderModal()}

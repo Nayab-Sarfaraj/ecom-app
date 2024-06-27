@@ -6,14 +6,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 import Header from '../components/Header';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import userContext from '../Context/userContext';
+import { useSelector } from 'react-redux';
 const SignUp = () => {
   const [email, setEmail] = useState('');
   const [invalidInput, setInvalidInput] = useState(false);
@@ -24,7 +25,8 @@ const SignUp = () => {
   const capitalizeString = str => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
-  const {userInfo, setUserInfo} = useContext(userContext);
+  const { userInfo, setUserInfo } = useContext(userContext);
+  const user = useSelector(state => state.LoginCredentials.data.user)
   const navigation = useNavigation();
   const [isVisible, setIsvisible] = useState(false);
   const [validationText, setValidationText] = useState('');
@@ -59,7 +61,7 @@ const SignUp = () => {
     setPassword(text);
   };
   const handleNavigation = () => {
-    if (email === userInfo.user.email) {
+    if (email === user.email) {
       navigation.navigate('ResetPassword');
     } else if (email) {
       setIsvisible(true);
@@ -79,7 +81,6 @@ const SignUp = () => {
             justifyContent: 'center',
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
             paddingHorizontal: 20,
-            // Set background color to transparent
           }}>
           <View
             style={{
@@ -95,7 +96,7 @@ const SignUp = () => {
             <AntDesign
               name={'exclamationcircleo'}
               size={80}
-              style={{color: '#ED1010'}}
+              style={{ color: '#ED1010' }}
             />
             <Text
               style={{
@@ -106,11 +107,11 @@ const SignUp = () => {
               }}>
               Validation failed
             </Text>
-            <Text style={{color: '#808080', fontSize: 18, fontWeight: '400'}}>
+            <Text style={{ color: '#808080', fontSize: 18, fontWeight: '400' }}>
               {validationText}{' '}
             </Text>
             <TouchableOpacity
-              style={{width: '100%'}}
+              style={{ width: '100%' }}
               onPress={() => setIsvisible(!isVisible)}>
               <Text
                 style={{
@@ -134,12 +135,12 @@ const SignUp = () => {
     );
   };
   return (
-    <View style={{paddingHorizontal: 20, backgroundColor: '#FFFFFF', flex: 1}}>
+    <View style={{ paddingHorizontal: 20, backgroundColor: '#FFFFFF', flex: 1 }}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Ionicons
           name={'arrow-back'}
           size={25}
-          style={{marginTop: 20, color: '#1A1A1A'}}
+          style={{ marginTop: 20, color: '#1A1A1A' }}
         />
       </TouchableOpacity>
       <Text
@@ -151,15 +152,15 @@ const SignUp = () => {
         }}>
         Forgot password
       </Text>
-      <Text style={{fontSize: 16, fontWeight: '300'}}>
+      <Text style={{ fontSize: 16, fontWeight: '300' }}>
         Enter your email for the verification process.
       </Text>
       {/* <Text style={{fontSize: 16, fontWeight: '300'}}>
         We will send 4-digit code to your email
       </Text> */}
       <View>
-        <View style={{marginVertical: 20}}>
-          <Text style={{fontSize: 20, color: '#1A1A1A', marginBottom: 7}}>
+        <View style={{ marginVertical: 20 }}>
+          <Text style={{ fontSize: 20, color: '#1A1A1A', marginBottom: 7 }}>
             Email
           </Text>
           <View
@@ -196,13 +197,13 @@ const SignUp = () => {
               <AntDesign
                 name={'exclamationcircleo'}
                 size={20}
-                style={[{color: '#ED1010'}, email === '' && {display: 'none'}]}
+                style={[{ color: '#ED1010' }, email === '' && { display: 'none' }]}
               />
             ) : (
               <AntDesign
                 name={'checkcircleo'}
                 size={20}
-                style={[{color: '#0C9409'}, email === '' && {display: 'none'}]}
+                style={[{ color: '#0C9409' }, email === '' && { display: 'none' }]}
               />
             )}
           </View>
